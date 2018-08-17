@@ -8,17 +8,15 @@ end
 def unplug(udid:)
   charging = (`adb -s #{udid} shell "su -c 'cat #{@charging_file}'"`.to_i == 1)
   puts "🔋 Charging enabled: #{charging}"
-  return unless charging
-  puts "🔌 Unplug #{udid}"
   `adb -s #{udid} shell "su -c 'echo 0 > #{@charging_file}'"`
+  puts "🔌 Unplug #{udid}" if charging
 end
 
 def plug(udid:)
   charging = (`adb -s #{udid} shell "su -c 'cat #{@charging_file}'"`.to_i == 1)
   puts "🔋 Charging enabled: #{charging}"
-  return if charging
-  puts "🔌 Plug #{udid}"
-  `adb -s #{udid} shell "su -c 'echo 1 > #{@charging_file}'"` unless charging
+  `adb -s #{udid} shell "su -c 'echo 1 > #{@charging_file}'"`
+  puts "🔌 Plug #{udid}" unless charging
 end
 
 def battery(udid:)
